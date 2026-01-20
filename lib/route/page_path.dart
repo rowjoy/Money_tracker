@@ -7,6 +7,7 @@ class PagePath {
   static const String userTopUp = "/userTopUp";
   static const String userCashOut = "/userCashOut";
   static const String allTransctionList = "/allTransctionList";
+  static const String bazaarView = "/bazaarView";
 
 
 }
