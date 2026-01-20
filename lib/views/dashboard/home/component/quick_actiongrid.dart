@@ -10,6 +10,7 @@ class QuickActionsGrid extends StatelessWidget {
   QuickActionsGrid({super.key});
 
   final List<_ActionItem> _items = [
+
     _ActionItem(
       id: 1,
       label: 'Add Income',
@@ -21,6 +22,12 @@ class QuickActionsGrid extends StatelessWidget {
       label: 'Cash Out',
       icon: Icons.account_balance_wallet_outlined,
       route:PagePath.userCashOut
+    ),
+    _ActionItem(
+      id: 5,
+      label: 'Bazaar',
+      icon: Icons.shopping_cart,
+      route: PagePath.bazaarView
     ),
     _ActionItem(
       id: 3,

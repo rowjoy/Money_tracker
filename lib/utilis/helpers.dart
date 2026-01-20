@@ -13,4 +13,17 @@ static String formatIsoToDate(String iso) {
     return iso;
   }
 }
+
+
+// =====================================================
+// 8) HELPERS
+// =====================================================
+static String fmtDate(DateTime dt) =>
+    "${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}";
+
+static String fmtIso(String iso) {
+  final dt = DateTime.tryParse(iso);
+  if (dt == null) return iso;
+  return fmtDate(dt);
+}
 }

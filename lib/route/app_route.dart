@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moneytracker/route/page_path.dart';
 import 'package:moneytracker/views/dashboard/baseview/dashbord_view.dart';
-import 'package:moneytracker/views/dashboard/home/all_transction_view.dart';
+import 'package:moneytracker/views/dashboard/home/component/all_transction_view.dart';
 import 'package:moneytracker/views/dashboard/home/bg_remover/bg_remover_view.dart';
 import 'package:moneytracker/views/dashboard/home/cash_out/cash_out.dart';
 import 'package:moneytracker/views/dashboard/home/top_up/user_top_up.dart';
 import 'package:moneytracker/views/onboard/onboard_view.dart';
 import 'package:moneytracker/views/splash/app_splash.dart';
+
+import '../views/dashboard/home/bazaar/bazaar_view.dart';
 
 class AppRoute {
  static  final GoRouter router = GoRouter(
@@ -75,6 +77,15 @@ class AppRoute {
             path: PagePath.allTransctionList,
              pageBuilder: (context, state) => CustomTransitionPage(
                child: TransactionsPage(),
+                transitionDuration: const Duration(milliseconds: 260),
+                reverseTransitionDuration: const Duration(milliseconds: 220),
+                transitionsBuilder: smoothPushTransition,
+              ),
+          ),
+          GoRoute(
+            path: PagePath.bazaarView,
+             pageBuilder: (context, state) => CustomTransitionPage(
+               child: BazaarView(),
                 transitionDuration: const Duration(milliseconds: 260),
                 reverseTransitionDuration: const Duration(milliseconds: 220),
                 transitionsBuilder: smoothPushTransition,
