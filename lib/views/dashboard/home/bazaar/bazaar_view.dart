@@ -7,9 +7,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_bloc.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_event.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_states.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_bloc.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_event.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_states.dart';
 import 'package:moneytracker/repo/bazaar_repo.dart';
 import 'package:moneytracker/utilis/helpers.dart';
 import 'package:moneytracker/views/dashboard/home/bazaar/add_bazaar_sheet.dart';

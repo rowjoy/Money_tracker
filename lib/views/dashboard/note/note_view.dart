@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moneytracker/bloc/note_bloc/note_bloc.dart';
+import 'package:moneytracker/bloc/note_bloc/note_state.dart';
 import 'package:moneytracker/utilis/colors.dart';
 import 'package:moneytracker/views/dashboard/note/add_note_view.dart';
 
@@ -116,101 +119,105 @@ class _NoteViewState extends State<NoteView> {
       return b.createdAt.compareTo(a.createdAt);
     });
 
-    return Scaffold(
-      backgroundColor: ProjectColor.whiteColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: ProjectColor.whiteColor,
-        elevation: 0,
-        title: const Text(
-          "Daily Notes",
-          style: TextStyle(
-            color: ProjectColor.blackColor,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        actions: [
-          IconButton(
-            tooltip: "Add note",
-            onPressed: () async {
-              final created = await Navigator.push<DailyNote?>(
-                context,
-                MaterialPageRoute(builder: (_) => const AddNotePage()),
-              );
-              if (created != null && mounted) {
-                setState(() => _notes.insert(0, created));
-              }
-            },
-            icon: Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: ProjectColor.lavenderPurple.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: ProjectColor.lavenderPurple.withOpacity(0.25),
+    return BlocBuilder<NoteBloc, NoteState>(
+      builder: (context , state) {
+        return Scaffold(
+          backgroundColor: ProjectColor.whiteColor,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: ProjectColor.whiteColor,
+            elevation: 0,
+            title: const Text(
+              "Daily Notes",
+              style: TextStyle(
+                color: ProjectColor.blackColor,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            actions: [
+              IconButton(
+                tooltip: "Add note",
+                onPressed: () async {
+                  final created = await Navigator.push<DailyNote?>(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AddNotePage()),
+                  );
+                  if (created != null && mounted) {
+                    setState(() => _notes.insert(0, created));
+                  }
+                },
+                icon: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: ProjectColor.lavenderPurple.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: ProjectColor.lavenderPurple.withOpacity(0.25),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    color: ProjectColor.electricPurple,
+                  ),
                 ),
               ),
-              child: const Icon(
-                Icons.add,
-                color: ProjectColor.electricPurple,
-              ),
-            ),
+              const SizedBox(width: 8),
+            ],
           ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            _premiumHeaderCard(),
-            const SizedBox(height: 12),
-
-            _premiumSearch(
-              onChanged: (_) => setState(() {}),
-              onClear: () {
-                _searchCtrl.clear();
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: 12),
-
-            _filterChips(),
-            const SizedBox(height: 12),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          body: SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
               children: [
-                Text(
-                  "Notes (${filtered.length})",
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w900,
-                    color: ProjectColor.blackColor,
-                  ),
+                _premiumHeaderCard(),
+                const SizedBox(height: 12),
+        
+                _premiumSearch(
+                  onChanged: (_) => setState(() {}),
+                  onClear: () {
+                    _searchCtrl.clear();
+                    setState(() {});
+                  },
                 ),
-                Text(
-                  _filterLabel(),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: ProjectColor.grey,
-                    fontWeight: FontWeight.w700,
-                  ),
+                const SizedBox(height: 12),
+        
+                _filterChips(),
+                const SizedBox(height: 12),
+        
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Notes (${filtered.length})",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: ProjectColor.blackColor,
+                      ),
+                    ),
+                    Text(
+                      _filterLabel(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: ProjectColor.grey,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 10),
+        
+                if (filtered.isEmpty)
+                  _emptyStatePremium()
+                else
+                  ...filtered.map((n) => _dismissibleNoteCard(n)),
+        
+                const SizedBox(height: 80),
               ],
             ),
-            const SizedBox(height: 10),
-
-            if (filtered.isEmpty)
-              _emptyStatePremium()
-            else
-              ...filtered.map((n) => _dismissibleNoteCard(n)),
-
-            const SizedBox(height: 80),
-          ],
-        ),
-      ),
+          ),
+        );
+      }
     );
   }
 

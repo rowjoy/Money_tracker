@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moneytracker/bloc/note_bloc/note_bloc.dart';
+import 'package:moneytracker/bloc/note_bloc/note_event.dart';
+import 'package:moneytracker/models/note_model.dart';
 import 'package:moneytracker/utilis/colors.dart';
 
 class AddNotePage extends StatefulWidget {
@@ -52,7 +56,6 @@ class _AddNotePageState extends State<AddNotePage> {
 
   void _save() {
     FocusManager.instance.primaryFocus?.unfocus();
-
     final title = _titleCtrl.text.trim();
     final content = _checklistMode
         ? _items.map((e) => "${e.done ? "[x]" : "[ ]"} ${e.text}").join('\n')
@@ -64,14 +67,14 @@ class _AddNotePageState extends State<AddNotePage> {
       );
       return;
     }
-
-    // ✅ Return data to NoteView (you can replace with your model)
-    Navigator.pop(context, {
-      "title": title.isEmpty ? "Untitled" : title,
-      "content": content,
-      "pinned": _pinned,
-      "createdAt": DateTime.now().toIso8601String(),
-    });
+    NoteModel noteModel = NoteModel(
+       title: title, 
+       content: content, 
+       pinned: _pinned, 
+       createdAt: DateTime.now().toIso8601String(),
+       updatedAt: DateTime.now().toIso8601String(),
+    );
+    context.read<NoteBloc>().add(NoteAddRequested(noteModel));
   }
 
   @override

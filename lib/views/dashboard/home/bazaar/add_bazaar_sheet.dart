@@ -5,10 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_bloc.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_event.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_bloc.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_event.dart';
 
-import '../../../../bloc/bazaar/bazaar_states.dart';
+import '../../../../bloc/bazaar_bloc/bazaar_states.dart';
 import '../../../../utilis/colors.dart';
 
 class AddBazaarSheet extends StatefulWidget {

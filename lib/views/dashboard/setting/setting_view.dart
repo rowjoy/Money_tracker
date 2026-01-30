@@ -12,7 +12,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:moneytracker/utilis/colors.dart';
-import 'package:moneytracker/widget/custom_appber.dart';
+
+
+import '../../../database/db_export/db_export_service.dart';
 
 class SettingView extends StatelessWidget {
   const SettingView({super.key});
@@ -50,8 +52,7 @@ class SettingView extends StatelessWidget {
               title: "Export Database",
               subtitle: "Backup your SQLite file",
               onTap: () async {
-                // TODO: call your exporter
-                // await DBExporter.shareDatabase("moneytracker.db");
+                await  DbExportService().shareDatabaseFile();
               },
             ),
             _tile(

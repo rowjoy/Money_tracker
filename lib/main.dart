@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneytracker/apps.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_bloc.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_event.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_bloc.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_event.dart';
 import 'package:moneytracker/bloc/dashboard_bloc/dash_bloc.dart';
 import 'package:moneytracker/bloc/home_bloc/wallet_bloc.dart';
 import 'package:moneytracker/bloc/home_bloc/wallet_event.dart';
+import 'package:moneytracker/bloc/note_bloc/note_bloc.dart';
+import 'package:moneytracker/bloc/note_bloc/note_event.dart';
 import 'package:moneytracker/bloc/onboard_bloc/onboard_bloc.dart';
 import 'package:moneytracker/bloc/splash_bloc/splash_cubit.dart';
 import 'package:moneytracker/database/db_helper.dart';
 import 'package:moneytracker/repo/bazaar_repo.dart';
+import 'package:moneytracker/repo/note_repo.dart';
 import 'package:moneytracker/repo/wallet_repository.dart';
 
 void main() async {
@@ -21,10 +24,10 @@ void main() async {
             BlocProvider(create: (_)=> SplashCubit()),
             BlocProvider(create: (_)=> OnboardCubit()),
             BlocProvider(create: (_)=> DashBoardBloc()),
+            
             BlocProvider(create: (_) => WalletBloc(WalletRepository())..add(WalletLoadRequested()),),
-            BlocProvider<BazaarBloc>(create: (_) => BazaarBloc(BazaarRepository())..add(BazaarLoadByDate(DateTime.now())),
-        ),
-
+            BlocProvider<BazaarBloc>(create: (_) => BazaarBloc(BazaarRepository())..add(BazaarLoadByDate(DateTime.now()))),
+            BlocProvider<NoteBloc>(create: (_) => NoteBloc(NoteRepository())..add(NoteLoadRequested())),
         ], 
        child: const MyApp(),
     ),

@@ -1,0 +1,1 @@
+enum NoteFilter { all, pinned, today }
