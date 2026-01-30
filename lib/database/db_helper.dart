@@ -48,6 +48,16 @@ class DBHelper {
               value TEXT
             );
           ''');
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS notes (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              title TEXT,
+              content TEXT,
+              pinned INTEGER DEFAULT 0,
+              created_at TEXT NOT NULL,
+              updated_at TEXT
+            );
+          ''');
         }
       },
     );
@@ -97,6 +107,18 @@ class DBHelper {
       CREATE TABLE IF NOT EXISTS app_settings(
         key TEXT PRIMARY KEY,
         value TEXT
+      );
+    ''');
+
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS notes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        content TEXT,
+        pinned INTEGER DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT
       );
     ''');
   }

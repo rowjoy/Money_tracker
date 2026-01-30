@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_event.dart';
-import 'package:moneytracker/bloc/bazaar/bazaar_states.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_event.dart';
+import 'package:moneytracker/bloc/bazaar_bloc/bazaar_states.dart';
 import 'package:moneytracker/repo/bazaar_repo.dart';
 
 class BazaarBloc extends Bloc<BazaarEvent, BazaarState> {

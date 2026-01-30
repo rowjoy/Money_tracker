@@ -5,6 +5,7 @@ import 'package:moneytracker/views/dashboard/baseview/dashbord_view.dart';
 import 'package:moneytracker/views/dashboard/home/component/all_transction_view.dart';
 import 'package:moneytracker/views/dashboard/home/bg_remover/bg_remover_view.dart';
 import 'package:moneytracker/views/dashboard/home/cash_out/cash_out.dart';
+import 'package:moneytracker/views/dashboard/home/insights/inights_view.dart';
 import 'package:moneytracker/views/dashboard/home/top_up/user_top_up.dart';
 import 'package:moneytracker/views/onboard/onboard_view.dart';
 import 'package:moneytracker/views/splash/app_splash.dart';
@@ -86,6 +87,15 @@ class AppRoute {
             path: PagePath.bazaarView,
              pageBuilder: (context, state) => CustomTransitionPage(
                child: BazaarView(),
+                transitionDuration: const Duration(milliseconds: 260),
+                reverseTransitionDuration: const Duration(milliseconds: 220),
+                transitionsBuilder: smoothPushTransition,
+              ),
+          ),
+          GoRoute(
+            path: PagePath.insightsView,
+             pageBuilder: (context, state) => CustomTransitionPage(
+               child: InsightsView(),
                 transitionDuration: const Duration(milliseconds: 260),
                 reverseTransitionDuration: const Duration(milliseconds: 220),
                 transitionsBuilder: smoothPushTransition,

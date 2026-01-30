@@ -39,7 +39,7 @@ class QuickActionsGrid extends StatelessWidget {
       id: 4,
       label: 'Insights',
       icon: Icons.bar_chart_outlined,
-      route: ""
+      route: PagePath.insightsView,
     ),
   ];
 
