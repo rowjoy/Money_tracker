@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneytracker/bloc/note_bloc/note_bloc.dart';
 import 'package:moneytracker/bloc/note_bloc/note_state.dart';
+import 'package:moneytracker/models/note_model.dart';
 import 'package:moneytracker/utilis/colors.dart';
 import 'package:moneytracker/views/dashboard/note/add_note_view.dart';
 
 /// ------------------------------
 /// SAMPLE MODEL + DATA
 /// ------------------------------
-class DailyNote {
+/*
+class NoteModel {
   final int id;
   final String title;
   final String content;
   final DateTime createdAt;
   final bool pinned;
 
-  const DailyNote({
+  const NoteModel({
     required this.id,
     required this.title,
     required this.content,
@@ -23,7 +25,7 @@ class DailyNote {
     this.pinned = false,
   });
 
-  DailyNote copyWith({bool? pinned}) => DailyNote(
+  NoteModel copyWith({bool? pinned}) => NoteModel(
         id: id,
         title: title,
         content: content,
@@ -31,29 +33,30 @@ class DailyNote {
         pinned: pinned ?? this.pinned,
       );
 }
-
-final sampleNotes = <DailyNote>[
-  DailyNote(
+*/
+/*
+final sampleNotes = <NoteModel>[
+  NoteModel(
     id: 1,
     title: "Plan for today",
     content: "• Study 1 hour\n• Walk 20 min\n• Finish UI for wallet",
     createdAt: DateTime.now().subtract(const Duration(hours: 2)),
     pinned: true,
   ),
-  DailyNote(
+  NoteModel(
     id: 2,
     title: "Shopping list",
     content: "Rice, Eggs, Milk, Soap",
     createdAt: DateTime.now().subtract(const Duration(days: 1, hours: 3)),
   ),
-  DailyNote(
+  NoteModel(
     id: 3,
     title: "Idea",
     content: "Add note suggestions + export DB in settings.",
     createdAt: DateTime.now().subtract(const Duration(days: 2)),
   ),
 ];
-
+*/
 /// ------------------------------
 /// PREMIUM NOTE VIEW
 /// - Search + clear
@@ -73,13 +76,13 @@ enum NoteFilter { all, pinned, today }
 
 class _NoteViewState extends State<NoteView> {
   final _searchCtrl = TextEditingController();
-  late List<DailyNote> _notes;
+  // late List<NoteModel> _notes;
   NoteFilter _filter = NoteFilter.all;
 
   @override
   void initState() {
     super.initState();
-    _notes = List.of(sampleNotes);
+    // _notes = List.of(sampleNotes);
   }
 
   @override
@@ -90,37 +93,40 @@ class _NoteViewState extends State<NoteView> {
 
   @override
   Widget build(BuildContext context) {
-    final query = _searchCtrl.text.trim().toLowerCase();
-
-    List<DailyNote> filtered = _notes.where((n) {
-      if (query.isEmpty) return true;
-      return n.title.toLowerCase().contains(query) ||
-          n.content.toLowerCase().contains(query);
-    }).toList();
-
-    // Apply filter
-    filtered = filtered.where((n) {
-      switch (_filter) {
-        case NoteFilter.all:
-          return true;
-        case NoteFilter.pinned:
-          return n.pinned;
-        case NoteFilter.today:
-          final now = DateTime.now();
-          return n.createdAt.year == now.year &&
-              n.createdAt.month == now.month &&
-              n.createdAt.day == now.day;
-      }
-    }).toList();
-
-    // Sort: pinned first, then newest
-    filtered.sort((a, b) {
-      if (a.pinned != b.pinned) return b.pinned ? 1 : -1;
-      return b.createdAt.compareTo(a.createdAt);
-    });
-
     return BlocBuilder<NoteBloc, NoteState>(
       builder: (context , state) {
+        if(state.loading){
+          return CircularProgressIndicator();
+        }
+
+        final query = _searchCtrl.text.trim().toLowerCase();
+        List<NoteModel> filtered = state.notes.where((n) {
+            if (query.isEmpty) return true;
+            return n.title.toLowerCase().contains(query) ||
+                n.content.toLowerCase().contains(query);
+          }).toList();
+
+          // Apply filter
+          filtered = filtered.where((n) {
+            switch (_filter) {
+              case NoteFilter.all:
+                return true;
+              case NoteFilter.pinned:
+                return n.pinned;
+              case NoteFilter.today:
+                final now = DateTime.now();
+                final noteDate = DateTime.parse(n.createdAt);
+                return noteDate.year == now.year && noteDate.month == now.month && noteDate.day == now.day;
+            }
+          }).toList();
+
+          // Sort: pinned first, then newest
+          filtered.sort((a, b) {
+            if (a.pinned != b.pinned) return b.pinned ? 1 : -1;
+            return b.createdAt.compareTo(a.createdAt);
+          });
+
+
         return Scaffold(
           backgroundColor: ProjectColor.whiteColor,
           appBar: AppBar(
@@ -138,13 +144,13 @@ class _NoteViewState extends State<NoteView> {
               IconButton(
                 tooltip: "Add note",
                 onPressed: () async {
-                  final created = await Navigator.push<DailyNote?>(
-                    context,
-                    MaterialPageRoute(builder: (_) => const AddNotePage()),
-                  );
-                  if (created != null && mounted) {
-                    setState(() => _notes.insert(0, created));
-                  }
+                  // final created = await Navigator.push<NoteModel?>(
+                  //   context,
+                  //   MaterialPageRoute(builder: (_) => const AddNotePage()),
+                  // );
+                  // if (created != null && mounted) {
+                  //   setState(() => state.notes.insert(0, created));
+                  // }
                 },
                 icon: Container(
                   width: 38,
@@ -210,7 +216,7 @@ class _NoteViewState extends State<NoteView> {
                 if (filtered.isEmpty)
                   _emptyStatePremium()
                 else
-                  ...filtered.map((n) => _dismissibleNoteCard(n)),
+                  ...filtered.map((n) => _dismissibleNoteCard(n,)),
         
                 const SizedBox(height: 80),
               ],
@@ -372,7 +378,7 @@ class _NoteViewState extends State<NoteView> {
     );
   }
 
-  Widget _dismissibleNoteCard(DailyNote note) {
+  Widget _dismissibleNoteCard(NoteModel note) {
     return Dismissible(
       key: ValueKey(note.id),
       direction: DismissDirection.horizontal,
@@ -411,7 +417,7 @@ class _NoteViewState extends State<NoteView> {
   }
 
   Widget _premiumNoteCard({
-    required DailyNote note,
+    required NoteModel note,
     required VoidCallback onTap,
     required VoidCallback onPinToggle,
     required VoidCallback onDelete,
@@ -473,7 +479,7 @@ class _NoteViewState extends State<NoteView> {
                           ),
                         ),
                         Text(
-                          _formatShort(note.createdAt),
+                          _formatShort(DateTime.parse(note.createdAt)),
                           style: const TextStyle(fontSize: 11, color: Colors.black54),
                         ),
                       ],
@@ -610,7 +616,7 @@ class _NoteViewState extends State<NoteView> {
   /// ------------------------------
   /// ACTIONS
   /// ------------------------------
-  void _togglePin(DailyNote note) {
+  void _togglePin(NoteModel note) {
     setState(() {
       final idx = _notes.indexWhere((x) => x.id == note.id);
       if (idx != -1) {
@@ -619,7 +625,7 @@ class _NoteViewState extends State<NoteView> {
     });
   }
 
-  void _deleteWithUndo(DailyNote note) {
+  void _deleteWithUndo(NoteModel note) {
     final removedIndex = _notes.indexWhere((x) => x.id == note.id);
     if (removedIndex == -1) return;
 
@@ -673,7 +679,7 @@ class _NoteViewState extends State<NoteView> {
     }
   }
 
-  void _openDetail(DailyNote note) {
+  void _openDetail(NoteModel note) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -704,7 +710,7 @@ class _NoteViewState extends State<NoteView> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _formatLong(note.createdAt),
+                    _formatLong(DateTime.parse(note.createdAt)),
                     style: const TextStyle(fontSize: 12, color: Colors.black54),
                   ),
                   const SizedBox(height: 12),
